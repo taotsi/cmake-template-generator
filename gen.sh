@@ -26,7 +26,6 @@ cd $proj_dir
 
 # TODO: use a seris `read` to configure
 
-
 mkdir -p include/$proj_name
 mkdir src
 mkdir app
@@ -35,14 +34,10 @@ mkdir extern
 mkdir docs
 
 # TODO: google test
-# TODO: submodule little-utility
 
-
-# .gitignore
 touch .gitignore
 echo build > .gitignore
 
-# README.md
 touch README.md
 echo "# $proj_name" > README.md
 
@@ -60,15 +55,26 @@ cd ..
 cd app
 touch CMakeLists.txt
 echo "add_executable($exe_name $exe_name.cc)"  | tee -a CMakeLists.txt > /dev/null
+echo "target_include_directories($exe_name PUBLIC \${PROJECT_SOURCE_DIR}/extern/little-utility/include/little-utility)" | tee -a CMakeLists.txt > /dev/null
+echo "target_include_directories($exe_name PUBLIC \${PROJECT_SOURCE_DIR}/include/$proj_name)" | tee -a CMakeLists.txt > /dev/null
 echo "set_target_properties($exe_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY \${PROJECT_BINARY_DIR})" | tee -a CMakeLists.txt > /dev/null
 touch $exe_name.cc
-echo "int main(int argc, const char** argv)\n{\n  \n  return 0;\n}" | tee $exe_name.cc > /dev/null
+echo "#include \"utility.hh\"\n\nint main(int argc, const char** argv)\n{\n  \n  return 0;\n}" | tee $exe_name.cc > /dev/null
+cd ..
+# TODO: build test
+
+# repo
+git init
+
+cd extern
+git submodule add https://github.com/taotsi/little-utility
 cd ..
 
-# git
-git init
-git add *
+git add --all
 git commit -m "init"
+
+mkdir build
+
 # TODO: ask for repo url
 
 echo "cmake project "$proj_name" is successfully created!"
