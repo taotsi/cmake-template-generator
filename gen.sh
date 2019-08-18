@@ -29,7 +29,7 @@ cd $proj_dir
 
 mkdir -p include/$proj_name
 mkdir src
-mkdir $exe_name
+mkdir app
 mkdir test
 mkdir extern
 mkdir docs
@@ -51,13 +51,13 @@ touch CMakeLists.txt
 echo "cmake_minimum_required(VERSION 3.7)" | tee -a CMakeLists.txt > /dev/null
 echo "project($proj_name VERSION 1.0 LANGUAGES CXX)" | tee -a CMakeLists.txt > /dev/null
 echo "add_subdirectory(src)" | tee -a CMakeLists.txt > /dev/null
-echo "add_subdirectory($exe_name)" | tee -a CMakeLists.txt > /dev/null
+echo "add_subdirectory(app)" | tee -a CMakeLists.txt > /dev/null
 
 cd src
 touch CMakeLists.txt
 cd ..
 
-cd $exe_name
+cd app
 touch CMakeLists.txt
 echo "add_executable($exe_name $exe_name.cc)"  | tee -a CMakeLists.txt > /dev/null
 echo "set_target_properties($exe_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY \${PROJECT_BINARY_DIR})" | tee -a CMakeLists.txt > /dev/null
