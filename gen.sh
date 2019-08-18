@@ -27,32 +27,16 @@ cd $proj_dir
 # TODO: use a seris `read` to configure
 
 
-# include/
 mkdir -p include/$proj_name
-
-# src/
 mkdir src
-cd src
-touch CMakeLists.txt
-# TODO: ask if user builds lib and ask for lib name
-cd ..
-
-# app/
 mkdir $exe_name
-cd $exe_name
-touch CMakeLists.txt
-touch $exe_name.cc
-cd ..
-
-# test/
 mkdir test
-
-# extern/
 mkdir extern
-# TODO: put google test here
-
-# docs/
 mkdir docs
+
+# TODO: google test
+# TODO: submodule little-utility
+
 
 # .gitignore
 touch .gitignore
@@ -64,8 +48,27 @@ echo "# $proj_name" > README.md
 
 # CMakwLists.txt
 touch CMakeLists.txt
+echo "cmake_minimum_required(VERSION 3.7)" | tee -a CMakeLists.txt > /dev/null
+echo "project($proj_name VERSION 1.0 LANGUAGES CXX)" | tee -a CMakeLists.txt > /dev/null
+echo "add_subdirectory(src)" | tee -a CMakeLists.txt > /dev/null
+echo "add_subdirectory($exe_name)" | tee -a CMakeLists.txt > /dev/null
 
-# TODO: git init
+cd src
+touch CMakeLists.txt
+cd ..
 
+cd $exe_name
+touch CMakeLists.txt
+echo "add_executable($exe_name $exe_name.cc)"  | tee -a CMakeLists.txt > /dev/null
+echo "set_target_properties($exe_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY \${PROJECT_BINARY_DIR})" | tee -a CMakeLists.txt > /dev/null
+touch $exe_name.cc
+echo "int main(int argc, const char** argv)\n{\n  \n  return 0;\n}" | tee $exe_name.cc > /dev/null
+cd ..
+
+# git
+git init
+git add *
+git commit -m "init"
+# TODO: ask for repo url
 
 echo "cmake project "$proj_name" is successfully created!"
