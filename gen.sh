@@ -2,11 +2,15 @@
 
 proj_name=$1
 proj_dir=$2
-exe_name=$3
+exe_name=$1
 
-if [ $# -ne 3 ]; then
+if [ $# -eq 2 ]; then
+  exe_name=$1
+elif [ $# -eq 3 ]; then
+  exe_name=$3
+else
   echo "error: wrong number of arguments!"
-  echo "usage:\n  gen <project name> <project dir> <exe_name>"
+  echo "usage:\n  gen <project name> <project dir> [exe_name]"
   exit 1
 fi
 
