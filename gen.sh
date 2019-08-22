@@ -61,6 +61,8 @@ touch CMakeLists.txt
 echo "add_executable($exe_name $exe_name.cc)"  | tee -a CMakeLists.txt > /dev/null
 echo "target_include_directories($exe_name PUBLIC \${PROJECT_SOURCE_DIR}/extern/little-utility/include/little-utility)" | tee -a CMakeLists.txt > /dev/null
 echo "target_include_directories($exe_name PUBLIC \${PROJECT_SOURCE_DIR}/include/$proj_name)" | tee -a CMakeLists.txt > /dev/null
+echo "target_include_directories($exe_name PUBLIC \${PROJECT_SOURCE_DIR}/extern/Catch2/single_include/catch2)" | tee -a CMakeLists.txt > /dev/null
+
 echo "set_target_properties($exe_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY \${PROJECT_BINARY_DIR})" | tee -a CMakeLists.txt > /dev/null
 touch $exe_name.cc
 echo "#include \"utility.hh\"\n\nint main(int argc, const char** argv)\n{\n  \n  return 0;\n}" | tee $exe_name.cc > /dev/null
@@ -72,6 +74,7 @@ git init
 
 cd extern
 git submodule add https://github.com/taotsi/little-utility
+git submodule add https://github.com/catchorg/Catch2
 cd ..
 
 git add --all
