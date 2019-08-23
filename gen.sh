@@ -35,6 +35,7 @@ mkdir src
 mkdir test
 mkdir extern
 mkdir docs
+mkdir build
 
 # TODO: google test
 
@@ -44,41 +45,55 @@ echo build > .gitignore
 touch README.md
 echo "# $proj_name" > README.md
 
-# CMakwLists.txt
+include_dir=\${PROJECT_SOURCE_DIR}/include/$proj_name
+include_dir_utility=\${PROJECT_SOURCE_DIR}/extern/little-utility/include/little-utility
+include_dir_catch2=\${PROJECT_SOURCE_DIR}/extern/Catch2/single_include/catch2
+
 touch CMakeLists.txt
-echo "cmake_minimum_required(VERSION 3.7)\n\
+echo "\
+cmake_minimum_required(VERSION 3.7)\n\
 project($proj_name VERSION 1.0 LANGUAGES CXX)\n\
-set(CMAKE_CXX_STANDARD 11)\n\
+set(CMAKE_CXX_STANDARD 14)\n\
 set(CMAKE_CXX_EXTENSIONS OFF)\n\
 set(CMAKE_CXX_STANDARD_REQUIRED ON)\n\
-add_subdirectory(src)" | tee -a CMakeLists.txt > /dev/null
+add_subdirectory(src)"\
+  | tee -a CMakeLists.txt > /dev/null
 
 cd src
 touch CMakeLists.txt
-echo "add_executable($exe_name main.cc)\n\
-target_include_directories($exe_name PUBLIC \${PROJECT_SOURCE_DIR}/extern/little-utility/include/little-utility)\n\
-target_include_directories($exe_name PUBLIC \${PROJECT_SOURCE_DIR}/include/$proj_name)\n\
-target_include_directories($exe_name PUBLIC \${PROJECT_SOURCE_DIR}/extern/Catch2/single_include/catch2)\n\
-set_target_properties($exe_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY \${PROJECT_BINARY_DIR})" | tee -a CMakeLists.txt > /dev/null
+echo "\
+add_executable($exe_name main.cc)\n\
+target_include_directories($exe_name PUBLIC ${include_dir_utility})\n\
+target_include_directories($exe_name PUBLIC ${include_dir})\n\
+target_include_directories($exe_name PUBLIC ${include_dir_catch2})\n\
+set_target_properties($exe_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY \${PROJECT_BINARY_DIR})"\
+  | tee -a CMakeLists.txt > /dev/null
 
 touch main.cc
-echo "#include \"utility.hh\"\n\nint main(int argc, const char** argv)\n{\n  \n  return 0;\n}" | tee $exe_name.cc > /dev/null
+echo "#include \"utility.hh\"\n\nint main(int argc, const char** argv)\n{\n  \n  return 0;\n}" | tee main.cc > /dev/null
 cd ..
-# TODO: build test
+
+cd test
+echo "\
+"\
+  | tee -a CMakeLists.txt > /dev/null
+cd ..
 
 # repo
 git init
 
 cd extern
 git submodule add https://github.com/taotsi/little-utility
-git submodule add https://github.com/catchorg/Catch2
+# git submodule add https://github.com/catchorg/Catch2
 cd ..
 
 git add --all
 git commit -m "init"
 
-mkdir build
-
 # TODO: ask for repo url
+
+# cd build
+# cmake ..
+# cmake --build .
 
 echo "cmake project "$proj_name" is successfully created!"
