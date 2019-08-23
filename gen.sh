@@ -3,6 +3,7 @@
 proj_name=$1
 proj_dir=$2
 exe_name=$1
+test_name=${exe_name}_test
 
 if [ $# -eq 2 ]; then
   exe_name=$1
@@ -51,32 +52,61 @@ include_dir_catch2=\${PROJECT_SOURCE_DIR}/extern/Catch2/single_include/catch2
 
 touch CMakeLists.txt
 echo "\
-cmake_minimum_required(VERSION 3.7)\n\
-project($proj_name VERSION 1.0 LANGUAGES CXX)\n\
-set(CMAKE_CXX_STANDARD 14)\n\
-set(CMAKE_CXX_EXTENSIONS OFF)\n\
-set(CMAKE_CXX_STANDARD_REQUIRED ON)\n\
-add_subdirectory(src)"\
-  | tee -a CMakeLists.txt > /dev/null
+cmake_minimum_required(VERSION 3.7)
+project($proj_name VERSION 1.0 LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_subdirectory(src)
+add_subdirectory(test)
+enable_testing()
+add_test(
+  NAME $test_name
+  COMMAND $<TARGET_FILE:$test_name> --success
+)
+" | tee -a CMakeLists.txt > /dev/null
 
 cd src
 touch CMakeLists.txt
 echo "\
-add_executable($exe_name main.cc)\n\
-target_include_directories($exe_name PUBLIC ${include_dir_utility})\n\
-target_include_directories($exe_name PUBLIC ${include_dir})\n\
-target_include_directories($exe_name PUBLIC ${include_dir_catch2})\n\
-set_target_properties($exe_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY \${PROJECT_BINARY_DIR})"\
-  | tee -a CMakeLists.txt > /dev/null
+add_executable($exe_name main.cc)
+target_include_directories($exe_name PUBLIC $include_dir)
+target_include_directories($exe_name PUBLIC $include_dir_utility)
+
+set_target_properties($exe_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY \${PROJECT_BINARY_DIR})
+" | tee -a CMakeLists.txt > /dev/null
 
 touch main.cc
-echo "#include \"utility.hh\"\n\nint main(int argc, const char** argv)\n{\n  \n  return 0;\n}" | tee main.cc > /dev/null
+echo "\
+#include \"utility.hh\"
+
+int main(int argc, const char** argv)
+{
+
+  return 0;
+}
+" | tee main.cc > /dev/null
 cd ..
 
 cd test
 echo "\
-"\
-  | tee -a CMakeLists.txt > /dev/null
+add_executable($test_name test_main.cc $test_name.cc)
+target_include_directories($test_name PUBLIC $include_dir)
+target_include_directories($test_name PUBLIC $include_dir_catch2)
+set_target_properties($test_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY \${PROJECT_BINARY_DIR})
+" | tee -a CMakeLists.txt > /dev/null
+
+touch test_main.cc
+echo "\
+#define CATCH_CONFIG_MAIN
+#include \"catch.hpp\"
+" | tee -a test_main.cc > /dev/null
+
+touch $test_name.cc
+echo "\
+#include \"catch.hpp\"
+" | tee -a $test_name.cc > /dev/null
+
 cd ..
 
 # repo
@@ -84,7 +114,7 @@ git init
 
 cd extern
 git submodule add https://github.com/taotsi/little-utility
-# git submodule add https://github.com/catchorg/Catch2
+git submodule add https://github.com/catchorg/Catch2
 cd ..
 
 git add --all
