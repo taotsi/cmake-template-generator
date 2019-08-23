@@ -29,16 +29,12 @@ cp LICENSE $proj_dir
 
 cd $proj_dir
 
-# TODO: use a seris `read` to configure
-
 mkdir -p include/$proj_name
 mkdir src
 mkdir test
 mkdir extern
 mkdir docs
 mkdir build
-
-# TODO: google test
 
 touch .gitignore
 echo build > .gitignore
@@ -119,11 +115,5 @@ cd ..
 
 git add --all
 git commit -m "init"
-
-# TODO: ask for repo url
-
-# cd build
-# cmake ..
-# cmake --build .
 
 echo "cmake project "$proj_name" is successfully created!"
