@@ -89,6 +89,7 @@ echo "\
 add_executable($test_name test_main.cc $test_name.cc)
 target_include_directories($test_name PUBLIC $include_dir)
 target_include_directories($test_name PUBLIC $include_dir_catch2)
+target_include_directories($test_name PUBLIC $include_dir_utility)
 set_target_properties($test_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY \${PROJECT_BINARY_DIR})
 " | tee -a CMakeLists.txt > /dev/null
 
