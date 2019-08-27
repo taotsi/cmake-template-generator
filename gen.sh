@@ -3,7 +3,7 @@
 proj_name=$1
 proj_dir=$2
 exe_name=$1
-test_name=${exe_name}_test
+test_name=test_${exe_name}
 lib_name=lib${exe_name}
 
 if [ $# -eq 2 ]; then
@@ -80,6 +80,8 @@ add_library($lib_name ${exe_name}.cc)
 
 target_include_directories($lib_name PUBLIC \${include_dir})
 target_include_directories($lib_name PUBLIC \${utility_dir})
+
+set_target_properties($lib_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY \${PROJECT_BINARY_DIR})
 
 add_executable($exe_name main.cc)
 
