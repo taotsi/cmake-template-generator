@@ -86,7 +86,7 @@ add_executable($exe_name main.cc)
 target_include_directories($exe_name PUBLIC \${include_dir})
 target_include_directories($exe_name PUBLIC \${utility_dir})
 
-target_link_library($exe_name PRIVATE $lib_name)
+target_link_libraries($exe_name PRIVATE $lib_name)
 
 set_target_properties($exe_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY \${PROJECT_BINARY_DIR})
 
@@ -118,7 +118,7 @@ target_include_directories($test_name PUBLIC \${include_dir})
 target_include_directories($test_name PUBLIC \${catch2_dir})
 target_include_directories($test_name PUBLIC \${utility_dir})
 
-target_link_library($test_name PRIVATE $lib_name)
+target_link_libraries($test_name PRIVATE $lib_name)
 
 set_target_properties($test_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY \${PROJECT_BINARY_DIR})
 
