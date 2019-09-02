@@ -5,6 +5,7 @@ proj_dir=$2
 exe_name=$1
 test_name=test_${exe_name}
 lib_name=lib${exe_name}
+generator_dir=$(pwd)
 
 if [ $# -eq 2 ]; then
   exe_name=$1
@@ -44,8 +45,8 @@ touch README.md
 echo "# $proj_name" > README.md
 
 include_dir=\${PROJECT_SOURCE_DIR}/include/$proj_name
-include_dir_utility=\${PROJECT_SOURCE_DIR}/extern/little-utility/include/little-utility
-include_dir_catch2=\${PROJECT_SOURCE_DIR}/extern/Catch2/single_include/catch2
+include_dir_utility=\${PROJECT_SOURCE_DIR}/extern/little-utility/
+include_dir_catch2=\${PROJECT_SOURCE_DIR}/extern/catch2
 
 touch CMakeLists.txt
 echo "\
@@ -108,8 +109,6 @@ int main(int argc, const char** argv)
 
 " | tee main.cc > /dev/null
 
-touch ${exe_name}.cc
-
 cd ..
 
 cd test
@@ -141,13 +140,9 @@ echo "\
 
 cd ..
 
-# repo
-git init
+cp -r ${generator_dir}/extern $proj_dir
 
-cd extern
-git submodule add https://github.com/taotsi/little-utility
-git submodule add https://github.com/catchorg/Catch2
-cd ..
+git init
 
 git add --all
 git commit -m "init"
