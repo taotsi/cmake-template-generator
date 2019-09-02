@@ -28,6 +28,7 @@ fi
 mkdir $proj_dir
 
 cp LICENSE $proj_dir
+cp update_extern.sh $proj_dir
 
 cd $proj_dir
 
@@ -73,11 +74,15 @@ add_test(
 
 " | tee -a CMakeLists.txt > /dev/null
 
+cd include/$proj_name
+touch ${proj_name}.hh
+cd ../..
+
 cd src
 
 touch CMakeLists.txt
 echo "\
-add_library($lib_name ${exe_name}.cc)
+add_library($lib_name ${proj_name}.cc)
 
 target_include_directories($lib_name PUBLIC \${include_dir})
 target_include_directories($lib_name PUBLIC \${utility_dir})
@@ -108,6 +113,8 @@ int main(int argc, const char** argv)
 }
 
 " | tee main.cc > /dev/null
+
+touch ${proj_name}.cc
 
 cd ..
 
