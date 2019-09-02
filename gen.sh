@@ -32,6 +32,7 @@ cp update_extern.sh $proj_dir
 cp update_extern.cmd $proj_dir
 
 cd $proj_dir
+proj_dir=$(pwd)
 
 mkdir -p include/$proj_name
 mkdir src
@@ -149,6 +150,9 @@ echo "\
 cd ..
 
 cp -r ${generator_dir}/extern $proj_dir
+
+echo ${generator_dir}/extern
+echo $proj_dir
 
 git init
 
