@@ -73,7 +73,6 @@ add_test(
   NAME $test_name
   COMMAND $<TARGET_FILE:$test_name> --success
 )
-
 " | tee -a CMakeLists.txt > /dev/null
 
 cd include/$proj_name
@@ -89,7 +88,13 @@ add_library($lib_name ${proj_name}.cc)
 target_include_directories($lib_name PUBLIC \${include_dir})
 target_include_directories($lib_name PUBLIC \${utility_dir})
 
-set_target_properties($lib_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY \${PROJECT_BINARY_DIR})
+if(MSVC)
+  set_target_properties($lib_name PROPERTIES ARCHIVE_OUTPUT_DIRECTORY  ${PROJECT_BINARY_DIR})
+  set_target_properties($lib_name PROPERTIES ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BINARY_DIR})
+  set_target_properties($lib_name PROPERTIES ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BINARY_DIR})
+else()
+  set_target_properties($lib_name PROPERTIES ARCHIVE_OUTPUT_DIRECTORY  ${PROJECT_BINARY_DIR})
+endif(MSVC)
 
 add_executable($exe_name main.cc)
 
@@ -98,8 +103,13 @@ target_include_directories($exe_name PUBLIC \${utility_dir})
 
 target_link_libraries($exe_name PRIVATE $lib_name)
 
-set_target_properties($exe_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY \${PROJECT_BINARY_DIR})
-
+if(MSVC)
+  set_target_properties($exe_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+  set_target_properties($exe_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BINARY_DIR})
+  set_target_properties($exe_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BINARY_DIR})
+else()
+  set_target_properties($exe_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+endif(MSVC)
 " | tee -a CMakeLists.txt > /dev/null
 
 touch main.cc
@@ -113,7 +123,6 @@ int main(int argc, const char** argv)
 
   return 0;
 }
-
 " | tee main.cc > /dev/null
 
 touch ${proj_name}.cc
@@ -130,21 +139,24 @@ target_include_directories($test_name PUBLIC \${utility_dir})
 
 target_link_libraries($test_name PRIVATE $lib_name)
 
-set_target_properties($test_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY \${PROJECT_BINARY_DIR})
-
+if(MSVC)
+  set_target_properties($test_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+  set_target_properties($test_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BINARY_DIR})
+  set_target_properties($test_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BINARY_DIR})
+else()
+  set_target_properties($test_name PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+endif(MSVC)
 " | tee -a CMakeLists.txt > /dev/null
 
 touch test_main.cc
 echo "\
 #define CATCH_CONFIG_MAIN
 #include \"catch.hpp\"
-
 " | tee -a test_main.cc > /dev/null
 
 touch $test_name.cc
 echo "\
 #include \"catch.hpp\"
-
 " | tee -a $test_name.cc > /dev/null
 
 cd ..
