@@ -29,7 +29,6 @@ mkdir $proj_dir
 
 cp LICENSE $proj_dir
 cp update_extern.sh $proj_dir
-cp update_extern.cmd $proj_dir
 
 cd $proj_dir
 proj_dir=$(pwd)

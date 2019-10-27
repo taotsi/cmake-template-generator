@@ -22,7 +22,7 @@ public:
         {
             std::stringstream ss;
             ss << "\033[0;45mMARK\033[0m"
-                << " " << file << "(" << line << ")\n";
+                << " " << file << "(" << line << "): ";
             std::cout << ss.str();
         }
     }

@@ -3,13 +3,10 @@
 cd extern/
 rm -rf Catch2
 rm -rf catch2
-mkdir temp
-cd temp
-git clone https://github.com/catchorg/Catch2.git
-cd ..
+
+wget https://raw.githubusercontent.com/catchorg/Catch2/master/single_include/catch2/catch.hpp
 mkdir catch2
-mv temp/Catch2/single_include/catch2/catch.hpp ./catch2/
-rm -rf temp
+mv catch.hpp ./catch2/
 
 rm -rf little-utility
 mkdir temp
