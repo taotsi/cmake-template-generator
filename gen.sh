@@ -25,6 +25,13 @@ if [ -d $proj_dir ]; then
   exit 1
 fi
 
+echo "Getting external dependencies..."
+rm -rf extern
+mkdir extern
+./update_extern.sh
+
+echo "Generating projects..."
+
 mkdir $proj_dir
 
 cp LICENSE $proj_dir
